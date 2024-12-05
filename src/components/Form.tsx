@@ -1,5 +1,11 @@
+import {FormEvent} from "react";
+
 export default function Form() {
-    return <form className="max-w-sm mx-auto p-5">
+    const handleSubmit = ((event: FormEvent) => {
+        event.preventDefault();
+        console.log("Form submitted");
+    });
+    return <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-5">
         <div className="mb-5">
             <label htmlFor="name" className="block mb-2 text-sm font-mediu text-gray-900 dark:text-white">Name</label>
             <input type="text" id="name"
