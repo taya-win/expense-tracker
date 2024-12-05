@@ -1,7 +1,12 @@
 import {FieldValues, useForm} from "react-hook-form";
 
+interface FormData{
+    name: string;
+    age: number;
+}
+
 export default function Form() {
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit, formState: {errors}} = useForm<FormData>();
 
     const onSubmit = (data: FieldValues) => { console.log(data) };
 
@@ -9,9 +14,11 @@ export default function Form() {
         <div className="mb-5">
             <label htmlFor="name" className="block mb-2 text-sm font-mediu text-gray-900 dark:text-white">Name</label>
             <input type="text" id="name"
-                   {...register("name")}
+                   {...register("name", { required: true, minLength: 5 })}
                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                   placeholder="John Doe" required/>
+                   placeholder="John Doe" />
+            {errors.name?.type === 'required' && <p className="text-sm text-red-500">The name field is required.</p>}
+            {errors.name?.type === 'minLength' && <p className="text-sm text-red-500">Your name must have at least 5 characters.</p>}
         </div>
 
         <div className="mb-5">
@@ -19,7 +26,7 @@ export default function Form() {
             <input type="number" id="age"
                    {...register("age")}
                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                   placeholder="30" required/>
+                   placeholder="30"/>
         </div>
 
         <button type="submit"
