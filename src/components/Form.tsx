@@ -1,28 +1,23 @@
-import {FormEvent, useRef} from "react";
+import {FormEvent, useState} from "react";
 
 export default function Form() {
-    const nameRef = useRef<HTMLInputElement>(null);
-    const ageRef = useRef<HTMLInputElement>(null);
-    const person = {name: "", age: 0};
+    const [person, setPerson] = useState({
+        name: "",
+        age: "",
+    });
 
-    const handleSubmit = ((event: FormEvent) => {
+    const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
 
-        if(nameRef.current) {
-            person.name = nameRef.current.value;
-        }
-
-        if(ageRef.current) {
-            person.age = parseInt(ageRef.current.value);
-        }
-
         console.log(person);
-    });
+    }
+
     return <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-5">
         <div className="mb-5">
             <label htmlFor="name" className="block mb-2 text-sm font-mediu text-gray-900 dark:text-white">Name</label>
             <input type="text" id="name"
-                   ref={nameRef}
+                   onChange={(e) => setPerson({...person, name: e.target.value})}
+                   value={person.name}
                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                    placeholder="John Doe" required/>
         </div>
@@ -30,7 +25,8 @@ export default function Form() {
         <div className="mb-5">
             <label htmlFor="age" className="block mb-2 text-sm font-mediu text-gray-900 dark:text-white">Age</label>
             <input type="number" id="age"
-                   ref={ageRef}
+                   onChange={e => setPerson({...person, age: e.target.value})}
+                   value={person.age}
                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                    placeholder="30" required/>
         </div>
