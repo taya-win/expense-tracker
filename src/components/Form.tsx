@@ -1,12 +1,16 @@
 import {FieldValues, useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
 
-interface FormData{
-    name: string;
-    age: number;
-}
+const schema = z.object({
+    name: z.string().min(3, {message: "Name must be at least 3 characters."}),
+    age: z.number({invalid_type_error: "Age is required."}).min(18, {message: "Age must be at least 18."}),
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function Form() {
-    const {register, handleSubmit, formState: {errors}} = useForm<FormData>();
+    const {register, handleSubmit, formState: {errors}} = useForm<FormData>({resolver: zodResolver(schema)});
 
     const onSubmit = (data: FieldValues) => { console.log(data) };
 
@@ -17,16 +21,16 @@ export default function Form() {
                    {...register("name", { required: true, minLength: 5 })}
                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                    placeholder="John Doe" />
-            {errors.name?.type === 'required' && <p className="text-sm text-red-500">The name field is required.</p>}
-            {errors.name?.type === 'minLength' && <p className="text-sm text-red-500">Your name must have at least 5 characters.</p>}
+            {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
         </div>
 
         <div className="mb-5">
             <label htmlFor="age" className="block mb-2 text-sm font-mediu text-gray-900 dark:text-white">Age</label>
             <input type="number" id="age"
-                   {...register("age")}
+                   {...register("age", {valueAsNumber: true})}
                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                    placeholder="30"/>
+            {errors.age && <p className="text-sm text-red-500">{errors.age.message}</p>}
         </div>
 
         <button type="submit"
