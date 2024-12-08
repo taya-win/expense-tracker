@@ -19,7 +19,9 @@ export default function App() {
 
     return (
         <div className="max-w-3xl mx-auto my-5 space-y-10 p-5">
-            <ExpenseForm />
+            <ExpenseForm onSubmit={data => {
+                setExpenses([...expenses, {...data, id: expenses.slice(-1)[0].id + 1}]);
+            }} />
             <ExpenseFilter onSelectCategory={category => setSelectedCategory(category)} />
             <ExpenseList
                 expenses={visibleExpenses}
